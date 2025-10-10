@@ -1,0 +1,1 @@
+/home/ankit/.config/omarchy/current/theme/neovim.lua
