@@ -1,4 +1,5 @@
 local lsp_zero = require('lsp-zero')
+
 -- require'lspconfig'.stimulus_ls.setup{
 --   settings = {
 --     filetypes = { "stimulus", "html", "css", "scss", "js", "jsx", "ts", "tsx", "erb" },
@@ -16,20 +17,23 @@ require('mason-lspconfig').setup({
   ensure_installed = {},
   handlers = {
     lsp_zero.default_setup,
-    solargraph = function ()
-         require('lspconfig').solargraph.setup({
-            settings = {
-                solargraph = {
-                    diagnostics = false
-                }
-            }
-        })
+    gopls = function()
+      return
     end,
     eslint = function ()
-        require('lspconfig').eslint.setup({})
+        vim.lsp.enable('eslint')
     end,
+    -- gopls = function ()
+    --     require('lspconfig').gopls.setup({
+    --       settings = {
+    --         gopls = {
+    --           diagnostics = false
+    --         }
+    --       }
+    --     })
+    -- end,
     lua_ls = function ()
-        require('lspconfig').lua_ls.setup({
+        vim.lsp.config('lua_ls', {
           settings = {
             Lua = {
               diagnostics = {
@@ -47,6 +51,8 @@ require('mason-lspconfig').setup({
             }
           }
         })
+
+        vim.lsp.enable('lua_ls')
     end,
   },
 })
@@ -69,4 +75,3 @@ cmp.setup({
     ['<CR>'] = cmp.mapping.confirm({select = false}),
   })
 })
-
