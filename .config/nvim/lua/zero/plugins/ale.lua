@@ -24,7 +24,7 @@ return {
       go = {"gofmt"},
     }
 
-    -- vim.g.ale_disable_lsp = 1
+    vim.g.ale_disable_lsp = 1
     -- vim.g.ale_completion_autoimport = 0
 
     vim.keymap.set('n', '<leader>rf', vim.cmd.ALEFix, {})

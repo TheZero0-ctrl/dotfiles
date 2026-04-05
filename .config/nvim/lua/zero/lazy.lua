@@ -21,8 +21,12 @@ require("lazy").setup({
   -- require "zero.plugins.catpuccin",
   -- require "zero.plugins.onedark",
   require "zero.plugins.theme",
+  -- lsp
+  require "zero.plugins.lsp.mason",
+  require "zero.plugins.lsp.lsp",
+  require "zero.plugins.nvim-cmp",
+  require "zero.plugins.lsp.cmp",
   -- general
-  require "zero.plugins.lsp-zero",
   require 'zero.plugins.telescope',
   require 'zero.plugins.treesetter',
   require("zero.plugins.lualine"),
