@@ -1,3 +1,10 @@
+local root_markers = { "Gemfile", ".git" }
+
+vim.lsp.config("solargraph", {
+  cmd = { "bundle", "exec", "solargraph", "stdio" },
+  root_markers = root_markers,
+})
+
 -- vim.lsp.config("lua_ls", {
 --   cmd = { 'lua-language-server' },
 --   filetypes = { 'lua' },
@@ -5,11 +12,25 @@
 
 vim.lsp.enable("lua_ls")
 vim.lsp.enable("ts_ls")
-vim.lsp.enable("rubocop")
 vim.lsp.enable("solargraph")
 vim.lsp.enable("gopls")
+vim.lsp.enable("rust_analyzer")
+vim.lsp.enable("pyright")
+
+vim.diagnostic.config({
+  virtual_text = false,
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = true,
+  float = {
+    border = "rounded",
+    source = "if_many",
+  },
+})
 
 local keymap = vim.keymap -- for conciseness
+
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("UserLspConfig", {}),
   callback = function(ev)

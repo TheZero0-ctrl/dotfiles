@@ -10,7 +10,7 @@ return {
     vim.g.ale_linters_explicit = 1
     -- vim.g:ale_use_neovim_diagnostics_api = 1
 
-    -- vim.g.ale_ruby_rubocop_executable = 'bundle'
+    vim.g.ale_ruby_rubocop_executable = 'bundle'
     -- vim.g.ale_ruby_rubocop_options = 'exec rubocop'
 
     -- Tune linter's error and warning signs
@@ -27,8 +27,11 @@ return {
     vim.g.ale_disable_lsp = 1
     -- vim.g.ale_completion_autoimport = 0
 
+    -- vim.keymap.set('n', '<leader>rf', '<cmd>ALEFix<CR>', { desc = 'ALE fix' })
+    -- vim.keymap.set('n', '<leader>ca', '<cmd>ALECodeAction<CR>', { desc = 'ALE code action' })
     vim.keymap.set('n', '<leader>rf', vim.cmd.ALEFix, {})
     vim.keymap.set('n', '<leader>ca', vim.cmd.ALECodeAction, {})
+
 
     -- don't show warning on right side of code
     vim.g.ale_virtualtext_cursor = 'disabled'
