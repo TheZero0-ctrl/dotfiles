@@ -10,6 +10,29 @@ vim.lsp.config("solargraph", {
 --   filetypes = { 'lua' },
 -- })
 
+vim.lsp.config("pyright", {
+  settings = {
+    python = {
+      analysis = {
+        autoSearchPaths = true,
+        autoImportCompletions = true,
+        diagnosticMode = "openFilesOnly",
+        useLibraryCodeForTypes = true,
+      },
+    },
+  },
+})
+
+vim.api.nvim_create_user_command("LspRestart", function()
+  for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
+    client:stop(true)
+  end
+
+  vim.defer_fn(function()
+    vim.cmd("edit")
+  end, 100)
+end, { desc = "Restart LSP clients attached to the current buffer" })
+
 vim.lsp.enable("lua_ls")
 vim.lsp.enable("ts_ls")
 vim.lsp.enable("solargraph")
