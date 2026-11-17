@@ -7,9 +7,12 @@
           "id": "omarchy.indicators"
         },
         {
+          "id": "io.noemir.desktop"
+        },
+        {
+          "id": "omarchy.clock",
           "format": "ddd d MMM h:mm AP",
           "formatAlt": "d MMMM 'W'ww yyyy",
-          "id": "omarchy.clock",
           "verticalFormat": "h\n—\nmm\nAP"
         },
         {
@@ -64,6 +67,10 @@
     "lock": 300,
     "screensaver": 150
   },
-  "plugins": [],
+  "plugins": [
+    {
+      "id": "io.noemir.desktop"
+    }
+  ],
   "version": 1
 }

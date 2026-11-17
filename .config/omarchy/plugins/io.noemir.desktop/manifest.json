@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "io.noemir.desktop",
+  "name": "Noemir Desktop",
+  "version": "0.2.0",
+  "author": "Noemir contributors",
+  "description": "Quick text chat and desktop indicators for Noemir.",
+  "kinds": [
+    "panel",
+    "bar-widget"
+  ],
+  "keepLoaded": true,
+  "entryPoints": {
+    "panel": "DesktopStatus.qml",
+    "barWidget": "NoemirBarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Noemir Thinking",
+    "description": "Shows while Noemir evaluates background context.",
+    "category": "AI",
+    "allowMultiple": false,
+    "defaultSection": "center"
+  }
+}

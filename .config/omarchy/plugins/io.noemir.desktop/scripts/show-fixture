@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+name="${1:-listening}"
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+runtime_dir="${XDG_RUNTIME_DIR:?XDG_RUNTIME_DIR is not set}/noemir"
+target="$runtime_dir/desktop-status.sock"
+pid_file="$runtime_dir/desktop-status-fixture.pid"
+payload="$runtime_dir/desktop-status-fixture.json"
+
+mkdir -p "$runtime_dir"
+chmod 700 "$runtime_dir"
+
+fixture_running() {
+  [[ -f "$pid_file" ]] || return 1
+  pid="$(<"$pid_file")"
+  [[ "$pid" =~ ^[0-9]+$ ]] || return 1
+  kill -0 "$pid" 2>/dev/null || return 1
+  [[ -r "/proc/$pid/cmdline" ]] || return 1
+  tr '\0' ' ' <"/proc/$pid/cmdline" | grep -Fq "UNIX-LISTEN:$target"
+}
+
+stop_fixture() {
+  local owned=false
+  if fixture_running; then
+    owned=true
+    pid="$(<"$pid_file")"
+    kill -- "-$pid" 2>/dev/null || kill "$pid" 2>/dev/null || true
+  fi
+  rm -f "$pid_file" "$payload"
+  if [[ "$owned" == true && -S "$target" ]]; then
+    rm -f "$target"
+  fi
+}
+
+if [[ "$name" == "clear" ]]; then
+  stop_fixture
+  exit 0
+fi
+
+fixture="$root/fixtures/$name.json"
+if [[ ! -f "$fixture" ]]; then
+  printf 'Unknown fixture: %s\n' "$name" >&2
+  printf 'Available fixtures: ' >&2
+  printf '%s ' "$root"/fixtures/*.json >&2
+  printf '\n' >&2
+  exit 2
+fi
+
+command -v jq >/dev/null || {
+  printf 'jq is required\n' >&2
+  exit 1
+}
+command -v socat >/dev/null || {
+  printf 'socat is required\n' >&2
+  exit 1
+}
+
+if [[ -S "$target" ]] && ! fixture_running; then
+  if timeout 1 socat -u /dev/null "UNIX-CONNECT:$target" >/dev/null 2>&1; then
+    printf 'The Noemir status socket is already active; stop Noemir before serving fixtures.\n' >&2
+    exit 1
+  fi
+  rm -f "$target"
+fi
+
+stop_fixture
+
+revision="$(date +%s%N)"
+jq -c --argjson revision "$revision" '.revision = $revision' "$fixture" >"$payload"
+printf '\n' >>"$payload"
+
+setsid socat "UNIX-LISTEN:$target,fork,unlink-early,mode=600" "SYSTEM:cat '$payload'; sleep 86400" \
+  </dev/null >/dev/null 2>&1 &
+printf '%s\n' "$!" >"$pid_file"
